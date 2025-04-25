@@ -1,7 +1,18 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+  "compilerOptions": {
+    "baseUrl": "./src",  // Asegúrate de que apunte a la carpeta src
+    "paths": {
+      "@/*": ["*"]
+    },
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["dom", "esnext"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
   ]
 }
