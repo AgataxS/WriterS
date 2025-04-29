@@ -1,5 +1,14 @@
 <template>
-    <div class="space-y-6">
+  <div class="relative min-h-screen bg-white p-6">
+    <!-- Ícono de usuario -->
+    <div class="absolute top-4 right-4">
+      <button @click="modalOpen = true" class="text-gray-600 hover:text-gray-800">
+        <UserIcon class="w-6 h-6" />
+      </button>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="space-y-6 mt-12">
       <!-- Paso 1: Seleccionar carrera -->
       <div>
         <label for="carrera" class="block text-sm font-medium text-gray-700">Selecciona una carrera:</label>
@@ -12,7 +21,7 @@
           <option v-for="carrera in carreras" :key="carrera" :value="carrera">{{ carrera }}</option>
         </select>
       </div>
-  
+
       <div v-if="selectedCarrera">
         <button
           @click="step = 2"
@@ -21,7 +30,7 @@
           Siguiente
         </button>
       </div>
-  
+
       <!-- Paso 2: Seleccionar semestre -->
       <div v-if="step >= 2">
         <label for="semestre" class="block text-sm font-medium text-gray-700 mt-4">Selecciona el semestre:</label>
@@ -34,7 +43,7 @@
           <option v-for="n in 10" :key="n" :value="`Semestre ${n}`">Semestre {{ n }}</option>
         </select>
       </div>
-  
+
       <div v-if="selectedSemestre">
         <button
           @click="step = 3"
@@ -43,13 +52,13 @@
           Continuar
         </button>
       </div>
-  
-      <!-- Paso 3: Mostrar carrera, semestre y materias -->
+
+      <!-- Paso 3: Mostrar carrera, semestre y materia -->
       <div v-if="step >= 3">
         <div class="bg-gray-100 p-4 rounded-md shadow">
           <p><strong>Carrera:</strong> {{ selectedCarrera }}</p>
           <p><strong>Semestre:</strong> {{ selectedSemestre }}</p>
-  
+
           <div class="mt-4">
             <label for="materia" class="block text-sm font-medium text-gray-700">Selecciona materia:</label>
             <select
@@ -62,7 +71,7 @@
             </select>
           </div>
         </div>
-  
+
         <div v-if="selectedMateria" class="mt-4">
           <button
             @click="generarEvaluacion"
@@ -73,23 +82,59 @@
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref } from 'vue'
-  
-  const step = ref(1)
-  const selectedCarrera = ref('')
-  const selectedSemestre = ref('')
-  const selectedMateria = ref('')
-  
-  const carreras = ['Ingeniería de Sistemas', 'Administración de Empresas', 'Contaduría', 'Psicología']
-  const materias = [
-    'Matemáticas', 'Programación', 'Estadística', 'Contabilidad', 'Psicología General',
-  ]
-  
-  const generarEvaluacion = () => {
-    alert(`Carrera: ${selectedCarrera.value}\nSemestre: ${selectedSemestre.value}\nMateria: ${selectedMateria.value}`)
-  }
-  </script>
-  
+
+    <!-- MODAL DE USUARIO -->
+    <ModalUsuario
+      :visible="modalOpen"
+      :correo="correo"
+      :nuevaContrasena="nuevaContrasena"
+      @cerrar="modalOpen = false"
+      @abrir-historial="historialModalOpen = true"
+    />
+
+    <!-- MODAL DE HISTORIAL -->
+    <ModalHistorial
+      :visible="historialModalOpen"
+      :carrera="selectedCarrera"
+      :semestre="selectedSemestre"
+      :materia="selectedMateria"
+      @cerrar="historialModalOpen = false"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { UserIcon } from '@heroicons/vue/24/solid'
+import ModalUsuario from '../modals/ModalUsuario.vue'
+import ModalHistorial from '../modals/ModalHistorial.vue'
+
+const step = ref(1)
+const carreras = ref(['Ingeniería de Sistemas', 'Administración de Empresas', 'Derecho'])
+const materias = ref(['Matemáticas', 'Física', 'Programación', 'Contabilidad'])
+
+const selectedCarrera = ref('')
+const selectedSemestre = ref('')
+const selectedMateria = ref('')
+
+// Modales
+const modalOpen = ref(false)
+const historialModalOpen = ref(false)
+
+// Usuario
+const correo = ref('')
+const nuevaContrasena = ref('')
+
+// Instancia del router
+const router = useRouter()
+
+const generarEvaluacion = () => {
+  // Redirigir a la vista de cuestionario
+  router.push({ name: 'cuestionario' }) // Asegúrate de tener esta ruta configurada en tu router
+}
+</script>
+
+<style scoped>
+/* Estilos para el componente */
+</style>
