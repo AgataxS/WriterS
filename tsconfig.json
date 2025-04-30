@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",  // Asegúrate de que apunte a la carpeta src
+    "baseUrl": "./src",  
     "paths": {
       "@/*": ["*"]
     },
